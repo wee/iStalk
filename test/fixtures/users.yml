@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  lat: MyString
+  long: MyString
+  interests: MyString
+
+two:
+  name: MyString
+  lat: MyString
+  long: MyString
+  interests: MyString

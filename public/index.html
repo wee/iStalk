@@ -1,0 +1,201 @@
+<html>
+<head>
+<script src='sencha-touch.js'></script>
+<link rel='stylesheet' href='sencha-touch.css' />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
+<script>
+
+var stmap, people;
+var markersArray = [];
+
+new Ext.Application({
+    launch: function() {
+
+		stmap = new Ext.Map({
+            useCurrentLocation:true
+        });
+        
+        var sportsfield = new Ext.form.Text({
+		            name : 'sports',
+		            label: 'Sports?'
+		        });
+        var schoolfield = new Ext.form.Text({
+                     name : 'school',
+                     label: 'Alma mater'
+                 });
+        var potfield = new Ext.form.Number({
+                     name : 'pot',
+                     label: 'Smokes'
+                 });
+        var politicsfield = new Ext.form.Number({
+                     name : 'politics',
+                     label: 'Political Alignment'
+                 });
+        var veganfield = new Ext.form.Number({
+                     name : 'vegan',
+                     label: 'Vegetarian?'
+                 });
+
+        filter = new Ext.form.FormPanel({
+		    items: [
+		        sportsfield, schoolfield, potfield, politicsfield, veganfield
+		    ],
+		    
+		    
+		    
+		    dockedItems: [{
+                 xtype:'toolbar', dock:'bottom',
+             	 items:[{
+                    text:'Submit',
+		            listeners: {
+		                tap: function () {
+		                     datastore.getProxy().extraParams = {
+		                     	sports : sportsfield.getValue(),
+                                school : schoolfield.getValue(),
+                                pot : potfield.getValue(),
+                                politics :politicsfield.getValue(),
+                                vegan : veganfield.getValue()
+		                     };
+		                     
+		                     datastore.load();
+		                     viewport.setActiveItem(0, {type:'slide', duration:500});
+		                     }
+		            }
+	            }] 
+             }]
+		});
+    
+         
+    
+         var viewport;
+         viewport = new Ext.Panel({
+             fullscreen:true,
+             dockedItems: [{
+                 xtype:'toolbar', dock:'top', title:'iStalk',
+             	 items:[{
+                    text:'Filter',
+		            listeners: {
+		                tap: function () {
+		                    viewport.setActiveItem(1, {type:'slide', duration:500});
+		                }
+		            }
+	            }] 
+             }],
+             layout:"card",
+             items: [stmap,filter]
+            
+         
+         });
+         
+
+         Ext.regModel("Person", {
+            fields: [
+                {name: "name", type: "string"},
+                {name: "firstname", type: "string"},
+                {name: "lastname", type: "string"},
+                {name: "politics", type: "string"},
+                {name: "pot", type: "string"},
+                {name: "school", type: "string"},
+                {name: "sports", type: "string"},
+                {name: "vegan", type: "string"},
+                {name: "lat", type: "string"},
+                {name: "long", type: "string"},
+            ]
+        });
+		
+		var datastore = new Ext.data.Store({
+            model: 'Person',
+            autoLoad: true,
+            proxy: {
+                type: 'scripttag',
+                url: 'http://172.28.210.161:3000/users',
+                reader: {
+                    type: 'json',
+                }
+            },
+            listeners: {
+                 load: function (thisstore, records, success) {
+			        filter.load(records[0]);
+
+			        if (markersArray.length > 0) {
+			        	for (i = 0; i < markersArray.length; i++) {
+			        	//alert(i)
+			        		markersArray[i].setMap(null);
+			        	}
+			        }
+
+			        this.each(function(person) {
+			        
+			            
+			        
+			            var marker = new google.maps.Marker({
+			                position: new google.maps.LatLng(
+			                    person.get('lat'), person.get('long')
+			                ),
+			                title: person.get('firstname'),
+			                map:stmap.map
+			            });
+			            
+						markersArray.push(marker);
+						
+						var contents = person.get('firstname');
+						if (person.get('pot') == '1') {
+							contents += "<br/>"
+							contents += "Smokes Pot: Yes."
+							} else {
+							contents += "<br/>"
+							contents += "Smokes Pot: No."
+						}
+							
+						if (parseFloat(person.get('politics')) > 0.75) {
+							contents += "<br/>"
+							contents += "Political Alignment: Liberal." 
+						} else if (parseFloat(person.get('politics')) > 0.25) { 
+							contents += "<br/>"
+							contents += "Political Alignment: Moderate." 
+						} else {
+							contents += "<br/>"
+							contents += "Political Alignment: Conservative."
+						}
+						
+						contents += "<br/>"
+						contents += "School: " + person.get('school')
+						
+						contents += "<br/>"
+						contents += "Sports: " + person.get('sports')
+						
+						if (person.get('vegan') == '1') {
+							contents += "<br/>"
+							contents += "Hates meat."
+							} else {
+							contents += "<br/>"
+							contents += "Loves meat."
+						}
+						
+						var infowindow = new google.maps.InfoWindow({
+						    content: contents						
+						    });
+						
+						
+						google.maps.event.addListener(marker, 'click', function() {
+						  infowindow.open(stmap.map,marker);
+						});
+
+			        });
+                 
+                 }
+            }
+        });
+
+	     
+    }
+
+});
+
+
+</script>
+</head>
+
+<body></body>
+</html>
