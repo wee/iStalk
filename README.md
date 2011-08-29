@@ -5,6 +5,7 @@ The main view showing all people markers around the current location.
 ![Main view](http://farm7.static.flickr.com/6074/6091307226_41c3aacff0.jpg)
 
 Tap Filter to set filter on various criteria
+
 ![Filter view](http://farm7.static.flickr.com/6193/6091306818_a26427995a.jpg)
 
 Result after filtering
