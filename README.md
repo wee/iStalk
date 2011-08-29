@@ -2,13 +2,13 @@ iStalk is a mobile web app to show map with location of people with searchable i
 
 The main view showing all people markers around the current location.
 
-<img src="http://farm7.static.flickr.com/6074/6091307226_41c3aacff0.jpg" alt=""/>
+![Main view](http://farm7.static.flickr.com/6074/6091307226_41c3aacff0.jpg)
 
 Tap Filter to set filter on various criteria
-<img src="http://farm7.static.flickr.com/6193/6091306818_a26427995a.jpg" alt=""/>
+![Filter view](http://farm7.static.flickr.com/6193/6091306818_a26427995a.jpg)
 
 Result after filtering
 
-<img src="http://farm7.static.flickr.com/6197/6090766533_b674a00a73.jpg" alt=""/>
+![Result after filter](http://farm7.static.flickr.com/6197/6090766533_b674a00a73.jpg)
 
 This app is a result from Chicago mobile hackathon on Aug 27, 2011 with Don P.
